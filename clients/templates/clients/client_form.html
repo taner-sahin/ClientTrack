@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | ClientTrack{% endblock %}
+
+{% block content %}
+
+<section class="ct-client-page">
+
+    <div class="ct-client-form-shell">
+
+        <div class="ct-client-page-header">
+
+            <div>
+                <span class="ct-section-label">
+                    CLIENTTRACK CRM
+                </span>
+
+                <h1>{{ page_title }}</h1>
+
+                <p>
+                    {{ page_description }}
+                </p>
+            </div>
+
+            {% if client %}
+
+                <a
+                    href="{% url 'clients:detail' client.pk %}"
+                    class="ct-client-back-link"
+                >
+                    ← Müşteri Detayına Dön
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'clients:list' %}"
+                    class="ct-client-back-link"
+                >
+                    ← Müşterilere Dön
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="ct-client-card">
+
+            <form method="post" novalidate class="ct-client-form">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="ct-form-alert">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+                <div class="ct-client-field">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        Müşteri Adı
+                    </label>
+
+                    {{ form.name }}
+
+                    {% for error in form.name.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="ct-client-grid">
+
+                    <div class="ct-client-field">
+
+                        <label for="{{ form.email.id_for_label }}">
+                            E-posta
+                        </label>
+
+                        {{ form.email }}
+
+                        {% for error in form.email.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="ct-client-field">
+
+                        <label for="{{ form.phone.id_for_label }}">
+                            Telefon
+                        </label>
+
+                        {{ form.phone }}
+
+                        {% for error in form.phone.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="ct-client-field">
+
+                    <label for="{{ form.website.id_for_label }}">
+                        Web Sitesi
+                    </label>
+
+                    {{ form.website }}
+
+                    {% for error in form.website.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="ct-client-field">
+
+                    <label for="{{ form.address.id_for_label }}">
+                        Adres
+                    </label>
+
+                    {{ form.address }}
+
+                    {% for error in form.address.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="ct-client-field">
+
+                    <label for="{{ form.notes.id_for_label }}">
+                        Notlar
+                    </label>
+
+                    {{ form.notes }}
+
+                    {% for error in form.notes.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="ct-client-form-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-clienttrack"
+                    >
+                        {{ submit_label }}
+                    </button>
+
+                    {% if client %}
+
+                        <a
+                            href="{% url 'clients:detail' client.pk %}"
+                            class="ct-client-cancel-btn"
+                        >
+                            İptal
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'clients:list' %}"
+                            class="ct-client-cancel-btn"
+                        >
+                            İptal
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

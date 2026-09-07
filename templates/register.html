@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Ücretsiz Başla | ClientTrack{% endblock %}
+
+{% block content %}
+
+<section class="ct-auth-page">
+
+    <div class="ct-auth-shell">
+
+        <!-- SOL TARAF -->
+        <div class="ct-auth-brand-panel">
+
+            <a
+                href="{% url 'core:home' %}"
+                class="ct-brand ct-auth-brand"
+            >
+                <span class="ct-logo">C</span>
+                <span>ClientTrack</span>
+            </a>
+
+            <div class="ct-auth-brand-content">
+
+                <span class="ct-section-label">
+                    CLIENTTRACK MINI CRM
+                </span>
+
+                <h1>
+                    Müşterilerinizi daha düzenli yönetin.
+                </h1>
+
+                <p>
+                    Müşterilerinizi, görüşmelerinizi,
+                    satış fırsatlarınızı ve takiplerinizi
+                    tek bir sistem altında yönetin.
+                </p>
+
+                <div class="ct-auth-benefits">
+
+                    <div>
+                        <span>✓</span>
+                        Kurulum gerektirmez
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Kredi kartı gerekmez
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Güvenli kullanıcı izolasyonu
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAĞ TARAF -->
+        <div class="ct-auth-form-panel">
+
+            <div class="ct-auth-form-box">
+
+                <div class="ct-auth-heading">
+
+                    <h2>
+                        Ücretsiz Başlayın
+                    </h2>
+
+                    <p>
+                        ClientTrack hesabınızı oluşturun.
+                    </p>
+
+                </div>
+
+
+                <form
+                    method="post"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+                    <!-- GENEL FORM HATALARI -->
+                    {% if form.non_field_errors %}
+                        <div class="ct-form-alert">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+
+                    <!-- AD / SOYAD -->
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="{{ form.first_name.id_for_label }}"
+                                class="ct-form-label"
+                            >
+                                Ad
+                            </label>
+
+                            <input
+                                type="text"
+                                name="{{ form.first_name.html_name }}"
+                                id="{{ form.first_name.id_for_label }}"
+                                class="form-control ct-form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                value="{{ form.first_name.value|default:'' }}"
+                                autocomplete="given-name"
+                            >
+
+                            {% for error in form.first_name.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="{{ form.last_name.id_for_label }}"
+                                class="ct-form-label"
+                            >
+                                Soyad
+                            </label>
+
+                            <input
+                                type="text"
+                                name="{{ form.last_name.html_name }}"
+                                id="{{ form.last_name.id_for_label }}"
+                                class="form-control ct-form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                value="{{ form.last_name.value|default:'' }}"
+                                autocomplete="family-name"
+                            >
+
+                            {% for error in form.last_name.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.email.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            E-posta
+                        </label>
+
+                        <input
+                            type="email"
+                            name="{{ form.email.html_name }}"
+                            id="{{ form.email.id_for_label }}"
+                            class="form-control ct-form-control {% if form.email.errors %}is-invalid{% endif %}"
+                            value="{{ form.email.value|default:'' }}"
+                            autocomplete="email"
+                        >
+
+                        {% for error in form.email.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- USERNAME -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.username.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            Kullanıcı Adı
+                        </label>
+
+                        <input
+                            type="text"
+                            name="{{ form.username.html_name }}"
+                            id="{{ form.username.id_for_label }}"
+                            class="form-control ct-form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            value="{{ form.username.value|default:'' }}"
+                            autocomplete="username"
+                        >
+
+                        {% for error in form.username.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- PASSWORD 1 -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.password1.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            Parola
+                        </label>
+
+                        <input
+                            type="password"
+                            name="{{ form.password1.html_name }}"
+                            id="{{ form.password1.id_for_label }}"
+                            class="form-control ct-form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                            autocomplete="new-password"
+                        >
+
+                        {% for error in form.password1.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- PASSWORD 2 -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.password2.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            Parola Tekrar
+                        </label>
+
+                        <input
+                            type="password"
+                            name="{{ form.password2.html_name }}"
+                            id="{{ form.password2.id_for_label }}"
+                            class="form-control ct-form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                            autocomplete="new-password"
+                        >
+
+                        {% for error in form.password2.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-clienttrack ct-auth-submit"
+                    >
+                        Hesabımı Oluştur
+                    </button>
+
+                </form>
+
+
+                <div class="ct-auth-switch">
+
+                    Zaten hesabınız var mı?
+
+                    <a href="{% url 'accounts:login' %}">
+                        Giriş Yap
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

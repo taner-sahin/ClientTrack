@@ -1,927 +1,576 @@
-{% extends "base.html" %}
-
-{% block title %} ClientTrack | Mini CRM{% endblock %}
-
+{% extends "base.html" %} {% block title %} ClientTrack | Mini CRM{% endblock %}
 {% block content %}
 
 <!-- =========================
      NAVBAR
 ========================= -->
 <nav class="navbar navbar-expand-lg ct-navbar">
-    <div class="ct-container">
+  <div class="ct-container">
+    <a class="navbar-brand ct-brand" href="{% url 'core:home' %}">
+      <span class="ct-logo">C</span>
+      <span>ClientTrack</span>
+    </a>
 
-        <a class="navbar-brand ct-brand" href="/">
-            <span class="ct-logo">C</span>
-            <span>ClientTrack</span>
-        </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#clientTrackNavbar"
+      aria-controls="clientTrackNavbar"
+      aria-expanded="false"
+      aria-label="Menüyü Aç"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#clientTrackNavbar"
-            aria-controls="clientTrackNavbar"
-            aria-expanded="false"
-            aria-label="Menüyü Aç"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="collapse navbar-collapse" id="clientTrackNavbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+        <li class="nav-item">
+          <a class="nav-link" href="#ozellikler"> Özellikler </a>
+        </li>
 
-        <div
-            class="collapse navbar-collapse"
-            id="clientTrackNavbar"
-        >
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+        <li class="nav-item">
+          <a class="nav-link" href="#fiyatlandirma"> Fiyatlandırma </a>
+        </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#ozellikler">
-                        Özellikler
-                    </a>
-                </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+          >
+            Kaynaklar
+          </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#fiyatlandirma">
-                        Fiyatlandırma
-                    </a>
-                </li>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="#neden-clienttrack">
+                Neden ClientTrack?
+              </a>
+            </li>
 
-                <li class="nav-item dropdown">
+            <li>
+              <a class="dropdown-item" href="#guvenlik"> Veri Güvenliği </a>
+            </li>
 
-                    <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                    >
-                        Kaynaklar
-                    </a>
+            <li>
+              <a class="dropdown-item" href="#iletisim"> İletişim </a>
+            </li>
+          </ul>
+        </li>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
+        {% if user.is_authenticated %}
 
-                        <li>
-                            <a class="dropdown-item" href="#neden-clienttrack">
-                                Neden ClientTrack?
-                            </a>
-                        </li>
+        <li class="nav-item ms-lg-2">
+          <span class="nav-link ct-login-link">
+            {% if user.first_name or user.last_name %}
+             {{ user.first_name }}
+              {{user.last_name }} 
+               {% else %} 
+               {{ user.username }} 
+               {% endif %}
+          </span>
+        </li>
 
-                        <li>
-                            <a class="dropdown-item" href="#guvenlik">
-                                Veri Güvenliği
-                            </a>
-                        </li>
+        <li class="nav-item">
+          <form
+            method="post"
+            action="{% url 'accounts:logout' %}"
+            class="d-inline"
+          >
+            {% csrf_token %}
 
-                        <li>
-                            <a class="dropdown-item" href="#iletisim">
-                                İletişim
-                            </a>
-                        </li>
+            <button type="submit" class="btn btn-clienttrack ct-navbar-button">
+              Çıkış Yap
+            </button>
+          </form>
+        </li>
 
-                    </ul>
+        {% else %}
 
-                </li>
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link ct-login-link" href="{% url 'accounts:login' %}">
+            Giriş Yap
+          </a>
+        </li>
 
-                <li class="nav-item ms-lg-2">
-                    <a
-                        class="nav-link ct-login-link"
-                        href="/accounts/login/"
-                    >
-                        Giriş Yap
-                    </a>
-                </li>
+        <li class="nav-item">
+          <a
+            class="btn btn-clienttrack ct-navbar-button"
+            href="{% url 'accounts:register' %}"
+          >
+            Ücretsiz Başla
+          </a>
+        </li>
 
-                <li class="nav-item">
-                    <a
-                        class="btn btn-clienttrack ct-navbar-button"
-                        href="/accounts/register/"
-                    >
-                        Ücretsiz Başla
-                    </a>
-                </li>
-
-            </ul>
-        </div>
-
+        {% endif %}
+      </ul>
     </div>
+  </div>
 </nav>
-
-
 <!-- =========================
      HERO
 ========================= -->
 <main>
-
-<section class="ct-hero">
-
+  <section class="ct-hero">
     <div class="ct-container">
+      <div class="row align-items-center g-5">
+        <!-- SOL TARAF -->
+        <div class="col-lg-5">
+          <div class="ct-eyebrow">
+            Mini CRM
+            <span>•</span>
+            Küçük Ekipler İçin Büyük Güç
+          </div>
 
-        <div class="row align-items-center g-5">
+          <h1 class="ct-hero-title">
+            Müşterilerinizi Anlayın,
 
-            <!-- SOL TARAF -->
-            <div class="col-lg-5">
+            <br />
 
-                <div class="ct-eyebrow">
-                    Mini CRM
-                    <span>•</span>
-                    Küçük Ekipler İçin Büyük Güç
-                </div>
+            Satışlarınızı Büyütün.
 
-                <h1 class="ct-hero-title">
+            <br />
 
-                    Müşterilerinizi Anlayın,
+            <span> ClientTrack Mini CRM </span>
 
-                    <br>
+            ile her temas değer yaratır.
+          </h1>
 
-                    Satışlarınızı Büyütün.
+          <p class="ct-hero-text">
+            Satış süreçlerinizi tek yerden yönetin. Müşteri bilgilerinizi,
+            görüşmelerinizi ve fırsatlarınızı düzenleyin, takiplerinizi
+            planlayın ve daha fazlasını başarın.
+          </p>
 
-                    <br>
-
-                    <span>
-                        ClientTrack Mini CRM
-                    </span>
-
-                    ile her temas değer yaratır.
-
-                </h1>
-
-                <p class="ct-hero-text">
-
-                    Satış süreçlerinizi tek yerden yönetin.
-                    Müşteri bilgilerinizi, görüşmelerinizi ve
-                    fırsatlarınızı düzenleyin, takiplerinizi
-                    planlayın ve daha fazlasını başarın.
-
-                </p>
-
-                <div class="d-flex flex-wrap gap-3 mt-4">
-
-                    <a
-                        href="/accounts/register/"
-                        class="btn btn-clienttrack ct-hero-btn"
-                    >
-                        Ücretsiz Başla
-                    </a>
-
-                    <a
-                        href="#ozellikler"
-                        class="btn btn-clienttrack-outline ct-hero-btn"
-                    >
-                        Özellikleri İncele
-                    </a>
-
-                </div>
-
-                <div class="ct-trust-list">
-
-                    <div>
-                        <span class="ct-check">✓</span>
-                        Kurulum Gerektirmez
-                    </div>
-
-                    <div>
-                        <span class="ct-check">✓</span>
-                        Kredi Kartı Gerekmez
-                    </div>
-
-                    <div>
-                        <span class="ct-check">✓</span>
-                        Hemen Başlayın
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- SAĞ TARAF -->
-            <div class="col-lg-7">
-
-                <div class="ct-product-showcase">
-
-                    <!-- DESKTOP DASHBOARD -->
-                    <div class="ct-dashboard-preview">
-
-                        <div class="ct-dashboard-top">
-
-                            <div class="ct-preview-dots">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-
-                            <div class="ct-preview-user">
-                                Taner Sahin
-                            </div>
-
-                        </div>
-
-
-                        <div class="ct-dashboard-grid">
-
-                            <div class="ct-stat-card">
-
-                                <small>
-                                    Toplam Kazanılan Fırsatlar
-                                </small>
-
-                                <strong>
-                                    ₺185.000
-                                </strong>
-
-                                <span class="ct-positive">
-                                    +18% bu ay
-                                </span>
-
-                            </div>
-
-                            <div class="ct-stat-card">
-
-                                <small>
-                                    Görüşme Yapılacak
-                                </small>
-
-                                <strong>
-                                    3
-                                </strong>
-
-                                <span>
-                                    Değerlendirme Aşaması
-                                </span>
-
-                            </div>
-
-
-                            <div class="ct-pipeline-card">
-
-                                <h6>
-                                    Satış Kanalı
-                                </h6>
-
-                                <div class="ct-funnel">
-
-                                    <div class="funnel-1"></div>
-                                    <div class="funnel-2"></div>
-                                    <div class="funnel-3"></div>
-                                    <div class="funnel-4"></div>
-
-                                </div>
-
-                                <div class="ct-funnel-labels">
-
-                                    <span>Yeni</span>
-                                    <span>İletişim</span>
-                                    <span>Görüşme</span>
-                                    <span>Kazanıldı</span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="ct-meetings-card">
-
-                                <div class="ct-card-heading">
-
-                                    <h6>
-                                        Son Görüşmeler
-                                    </h6>
-
-                                    <span>
-                                        Tümünü Gör
-                                    </span>
-
-                                </div>
-
-                                <div class="ct-meeting-row">
-
-                                    <strong>Acme Yazılım</strong>
-
-                                    <span>
-                                        Demo
-                                    </span>
-
-                                    <small>
-                                        30 Nis
-                                    </small>
-
-                                </div>
-
-                                <div class="ct-meeting-row">
-
-                                    <strong>Beta Teknoloji</strong>
-
-                                    <span>
-                                        Teklif Sunumu
-                                    </span>
-
-                                    <small>
-                                        29 Nis
-                                    </small>
-
-                                </div>
-
-                                <div class="ct-meeting-row">
-
-                                    <strong>Delta Danışmanlık</strong>
-
-                                    <span>
-                                        Görüşme
-                                    </span>
-
-                                    <small>
-                                        28 Nis
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="ct-follow-card">
-
-                                <h6>
-                                    Yaklaşan Takipler
-                                </h6>
-
-                                <div class="ct-chart-wrapper">
-
-                                    <div class="ct-donut-chart"></div>
-
-                                    <div class="ct-chart-info">
-
-                                        <p>
-                                            <span class="dot dot-blue"></span>
-                                            Kaçırılan Fırsatlar
-                                        </p>
-
-                                        <strong>
-                                            ₺185.000
-                                        </strong>
-
-                                        <p>
-                                            <span class="dot dot-teal"></span>
-                                            Yaklaşan Takipler
-                                        </p>
-
-                                        <small>
-                                            3 yarın yapılacak
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="ct-actions-card">
-
-                                <h6>
-                                    Hızlı İşlemler
-                                </h6>
-
-                                <div class="d-flex gap-2">
-
-                                    <button>
-                                        Not Ekle
-                                    </button>
-
-                                    <button>
-                                        Görev Ekle
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- MOBİL PREVIEW -->
-                    <div class="ct-phone-preview">
-
-                        <div class="ct-phone-notch"></div>
-
-                        <div class="ct-phone-screen">
-
-                            <div class="ct-phone-brand">
-
-                                <span class="ct-phone-logo">
-                                    C
-                                </span>
-
-                                ClientTrack
-
-                            </div>
-
-                            <h6>
-                                Hoş geldin, Taner Sahin
-                            </h6>
-
-                            <div class="ct-phone-box">
-
-                                <small>
-                                    Aylık Fırsat Değeri
-                                </small>
-
-                                <strong>
-                                    ₺4.815,25
-                                </strong>
-
-                                <span>
-                                    +12%
-                                </span>
-
-                            </div>
-
-                            <div class="ct-phone-box">
-
-                                <small>
-                                    Yeni Satış Değeri
-                                </small>
-
-                                <p>
-                                    Bugün
-                                    <strong>
-                                        ₺12.540
-                                    </strong>
-                                </p>
-
-                                <p>
-                                    Bu Hafta
-                                    <strong>
-                                        ₺47.850
-                                    </strong>
-                                </p>
-
-                                <p>
-                                    Bu Ay
-                                    <strong>
-                                        ₺185.000
-                                    </strong>
-                                </p>
-
-                            </div>
-
-                            <div class="ct-phone-box">
-
-                                <small>
-                                    Yaklaşan Takipler
-                                </small>
-
-                                <p>
-                                    Acme Yazılım
-                                </p>
-
-                                <p>
-                                    Beta Teknoloji
-                                </p>
-
-                                <p>
-                                    Delta Danışmanlık
-                                </p>
-
-                            </div>
-
-                            <button class="ct-phone-button">
-                                Tüm Takipler
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     ÖZELLİKLER
-========================= -->
-<section
-    class="ct-features"
-    id="ozellikler"
->
-
-    <div class="ct-container">
-
-        <div class="row g-4">
-
-            <div class="col-md-6 col-xl-3">
-
-                <article class="ct-feature-card">
-
-                    <div class="ct-feature-icon">
-                        👥
-                    </div>
-
-                    <h3>
-                        Müşteri Yönetimi
-                    </h3>
-
-                    <p>
-                        Tüm müşteri bilgilerinizi tek yerde
-                        toplayın ve düzenleyin.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-md-6 col-xl-3">
-
-                <article class="ct-feature-card">
-
-                    <div class="ct-feature-icon">
-                        ☎
-                    </div>
-
-                    <h3>
-                        Görüşme Takibi
-                    </h3>
-
-                    <p>
-                        Telefon, e-posta, notlar ve görüşmeleri
-                        kolayca takip edin.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-md-6 col-xl-3">
-
-                <article class="ct-feature-card">
-
-                    <div class="ct-feature-icon ct-feature-orange">
-                        ▽
-                    </div>
-
-                    <h3>
-                        Satış Hattı
-                    </h3>
-
-                    <p>
-                        Deals pipeline’ınızı görselleştirin
-                        ve satış sürecinizi yönetin.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-md-6 col-xl-3">
-
-                <article class="ct-feature-card">
-
-                    <div class="ct-feature-icon">
-                        ▣
-                    </div>
-
-                    <h3>
-                        Raporlama
-                    </h3>
-
-                    <p>
-                        Dashboard ve raporlarla
-                        performansınızı ölçün.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-lg-4">
-
-                <article class="ct-feature-card ct-feature-large">
-
-                    <div class="ct-feature-icon">
-                        🔔
-                    </div>
-
-                    <h3>
-                        Akıllı Hatırlatmalar
-                    </h3>
-
-                    <p>
-                        Önemli görüşme ve görevleri
-                        kaçırmadan zamanında aksiyon alın.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-lg-4">
-
-                <article class="ct-feature-card ct-feature-large">
-
-                    <div class="ct-feature-icon">
-                        👥
-                    </div>
-
-                    <h3>
-                        Takım Yönetimi
-                    </h3>
-
-                    <p>
-                        Ekibinizle paylaşın, yetkilendirin
-                        ve birlikte büyüyün.
-                    </p>
-
-                </article>
-
-            </div>
-
-
-            <div class="col-lg-4">
-
-                <article
-                    class="ct-feature-card ct-security-card"
-                    id="guvenlik"
-                >
-
-                    <div class="ct-lock">
-                        🔐
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Güvenli Veri İzolasyonu
-                        </h3>
-
-                        <p>
-                            Her kullanıcı yalnızca kendi müşteri,
-                            görüşme ve satış kayıtlarına erişir.
-                        </p>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     NEDEN CLIENTTRACK
-========================= -->
-<section
-    class="ct-about-section"
-    id="neden-clienttrack"
->
-
-    <div class="ct-container">
-
-        <div class="row align-items-center g-5">
-
-            <div class="col-lg-6">
-
-                <span class="ct-section-label">
-                    CLIENTTRACK
-                </span>
-
-                <h2>
-                    Müşteri ilişkilerini takip etmek
-                    karmaşık olmak zorunda değil.
-                </h2>
-
-                <p>
-                    ClientTrack, müşterilerinizi,
-                    görüşmelerinizi, fırsatlarınızı ve takiplerinizi
-                    tek sistem altında yönetebilmeniz için
-                    geliştirilmiş backend ağırlıklı bir Mini CRM’dir.
-                </p>
-
-            </div>
-
-            <div class="col-lg-6">
-
-                <div class="ct-about-panel">
-
-                    <div>
-                        <strong>
-                            01
-                        </strong>
-
-                        <span>
-                            Müşterinizi oluşturun
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>
-                            02
-                        </strong>
-
-                        <span>
-                            Görüşmenizi kaydedin
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>
-                            03
-                        </strong>
-
-                        <span>
-                            Satış fırsatınızı yönetin
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>
-                            04
-                        </strong>
-
-                        <span>
-                            Takiplerinizi kaçırmayın
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     FİYATLANDIRMA / CTA
-========================= -->
-<section
-    class="ct-pricing-section"
-    id="fiyatlandirma"
->
-
-    <div class="ct-container">
-
-        <div class="ct-pricing-box">
-
-            <div>
-
-                <span class="ct-section-label">
-                    BAŞLAMAYA HAZIR MISINIZ?
-                </span>
-
-                <h2>
-                    Müşterilerinizi daha düzenli yönetin.
-                </h2>
-
-                <p>
-                    ClientTrack ile müşteri ve satış sürecinizi
-                    tek bir yerde toplamaya başlayın.
-                </p>
-
-            </div>
-
+          <div class="d-flex flex-wrap gap-3 mt-4">
             <a
-                href="/accounts/register/"
-                class="btn btn-clienttrack"
+              href="/accounts/register/"
+              class="btn btn-clienttrack ct-hero-btn"
             >
-                Ücretsiz Başla
+              Ücretsiz Başla
             </a>
 
+            <a
+              href="#ozellikler"
+              class="btn btn-clienttrack-outline ct-hero-btn"
+            >
+              Özellikleri İncele
+            </a>
+          </div>
+
+          <div class="ct-trust-list">
+            <div>
+              <span class="ct-check">✓</span>
+              Kurulum Gerektirmez
+            </div>
+
+            <div>
+              <span class="ct-check">✓</span>
+              Kredi Kartı Gerekmez
+            </div>
+
+            <div>
+              <span class="ct-check">✓</span>
+              Hemen Başlayın
+            </div>
+          </div>
         </div>
 
+        <!-- SAĞ TARAF -->
+        <div class="col-lg-7">
+          <div class="ct-product-showcase">
+            <!-- DESKTOP DASHBOARD -->
+            <div class="ct-dashboard-preview">
+              <div class="ct-dashboard-top">
+                <div class="ct-preview-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <div class="ct-preview-user">Taner Sahin</div>
+              </div>
+
+              <div class="ct-dashboard-grid">
+                <div class="ct-stat-card">
+                  <small> Toplam Kazanılan Fırsatlar </small>
+
+                  <strong> ₺185.000 </strong>
+
+                  <span class="ct-positive"> +18% bu ay </span>
+                </div>
+
+                <div class="ct-stat-card">
+                  <small> Görüşme Yapılacak </small>
+
+                  <strong> 3 </strong>
+
+                  <span> Değerlendirme Aşaması </span>
+                </div>
+
+                <div class="ct-pipeline-card">
+                  <h6>Satış Kanalı</h6>
+
+                  <div class="ct-funnel">
+                    <div class="funnel-1"></div>
+                    <div class="funnel-2"></div>
+                    <div class="funnel-3"></div>
+                    <div class="funnel-4"></div>
+                  </div>
+
+                  <div class="ct-funnel-labels">
+                    <span>Yeni</span>
+                    <span>İletişim</span>
+                    <span>Görüşme</span>
+                    <span>Kazanıldı</span>
+                  </div>
+                </div>
+
+                <div class="ct-meetings-card">
+                  <div class="ct-card-heading">
+                    <h6>Son Görüşmeler</h6>
+
+                    <span> Tümünü Gör </span>
+                  </div>
+
+                  <div class="ct-meeting-row">
+                    <strong>Acme Yazılım</strong>
+
+                    <span> Demo </span>
+
+                    <small> 30 Nis </small>
+                  </div>
+
+                  <div class="ct-meeting-row">
+                    <strong>Beta Teknoloji</strong>
+
+                    <span> Teklif Sunumu </span>
+
+                    <small> 29 Nis </small>
+                  </div>
+
+                  <div class="ct-meeting-row">
+                    <strong>Delta Danışmanlık</strong>
+
+                    <span> Görüşme </span>
+
+                    <small> 28 Nis </small>
+                  </div>
+                </div>
+
+                <div class="ct-follow-card">
+                  <h6>Yaklaşan Takipler</h6>
+
+                  <div class="ct-chart-wrapper">
+                    <div class="ct-donut-chart"></div>
+
+                    <div class="ct-chart-info">
+                      <p>
+                        <span class="dot dot-blue"></span>
+                        Kaçırılan Fırsatlar
+                      </p>
+
+                      <strong> ₺185.000 </strong>
+
+                      <p>
+                        <span class="dot dot-teal"></span>
+                        Yaklaşan Takipler
+                      </p>
+
+                      <small> 3 yarın yapılacak </small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ct-actions-card">
+                  <h6>Hızlı İşlemler</h6>
+
+                  <div class="d-flex gap-2">
+                    <button>Not Ekle</button>
+
+                    <button>Görev Ekle</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MOBİL PREVIEW -->
+            <div class="ct-phone-preview">
+              <div class="ct-phone-notch"></div>
+
+              <div class="ct-phone-screen">
+                <div class="ct-phone-brand">
+                  <span class="ct-phone-logo"> C </span>
+
+                  ClientTrack
+                </div>
+
+                <h6>Hoş geldin, Taner Sahin</h6>
+
+                <div class="ct-phone-box">
+                  <small> Aylık Fırsat Değeri </small>
+
+                  <strong> ₺4.815,25 </strong>
+
+                  <span> +12% </span>
+                </div>
+
+                <div class="ct-phone-box">
+                  <small> Yeni Satış Değeri </small>
+
+                  <p>
+                    Bugün
+                    <strong> ₺12.540 </strong>
+                  </p>
+
+                  <p>
+                    Bu Hafta
+                    <strong> ₺47.850 </strong>
+                  </p>
+
+                  <p>
+                    Bu Ay
+                    <strong> ₺185.000 </strong>
+                  </p>
+                </div>
+
+                <div class="ct-phone-box">
+                  <small> Yaklaşan Takipler </small>
+
+                  <p>Acme Yazılım</p>
+
+                  <p>Beta Teknoloji</p>
+
+                  <p>Delta Danışmanlık</p>
+                </div>
+
+                <button class="ct-phone-button">Tüm Takipler</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-</section>
+  <!-- =========================
+     ÖZELLİKLER
+========================= -->
+  <section class="ct-features" id="ozellikler">
+    <div class="ct-container">
+      <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+          <article class="ct-feature-card">
+            <div class="ct-feature-icon">👥</div>
 
+            <h3>Müşteri Yönetimi</h3>
+
+            <p>Tüm müşteri bilgilerinizi tek yerde toplayın ve düzenleyin.</p>
+          </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+          <article class="ct-feature-card">
+            <div class="ct-feature-icon">☎</div>
+
+            <h3>Görüşme Takibi</h3>
+
+            <p>Telefon, e-posta, notlar ve görüşmeleri kolayca takip edin.</p>
+          </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+          <article class="ct-feature-card">
+            <div class="ct-feature-icon ct-feature-orange">▽</div>
+
+            <h3>Satış Hattı</h3>
+
+            <p>
+              Deals pipeline’ınızı görselleştirin ve satış sürecinizi yönetin.
+            </p>
+          </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+          <article class="ct-feature-card">
+            <div class="ct-feature-icon">▣</div>
+
+            <h3>Raporlama</h3>
+
+            <p>Dashboard ve raporlarla performansınızı ölçün.</p>
+          </article>
+        </div>
+
+        <div class="col-lg-4">
+          <article class="ct-feature-card ct-feature-large">
+            <div class="ct-feature-icon">🔔</div>
+
+            <h3>Akıllı Hatırlatmalar</h3>
+
+            <p>
+              Önemli görüşme ve görevleri kaçırmadan zamanında aksiyon alın.
+            </p>
+          </article>
+        </div>
+
+        <div class="col-lg-4">
+          <article class="ct-feature-card ct-feature-large">
+            <div class="ct-feature-icon">👥</div>
+
+            <h3>Takım Yönetimi</h3>
+
+            <p>Ekibinizle paylaşın, yetkilendirin ve birlikte büyüyün.</p>
+          </article>
+        </div>
+
+        <div class="col-lg-4">
+          <article class="ct-feature-card ct-security-card" id="guvenlik">
+            <div class="ct-lock">🔐</div>
+
+            <div>
+              <h3>Güvenli Veri İzolasyonu</h3>
+
+              <p>
+                Her kullanıcı yalnızca kendi müşteri, görüşme ve satış
+                kayıtlarına erişir.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+     NEDEN CLIENTTRACK
+========================= -->
+  <section class="ct-about-section" id="neden-clienttrack">
+    <div class="ct-container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="ct-section-label"> CLIENTTRACK </span>
+
+          <h2>
+            Müşteri ilişkilerini takip etmek karmaşık olmak zorunda değil.
+          </h2>
+
+          <p>
+            ClientTrack, müşterilerinizi, görüşmelerinizi, fırsatlarınızı ve
+            takiplerinizi tek sistem altında yönetebilmeniz için geliştirilmiş
+            backend ağırlıklı bir Mini CRM’dir.
+          </p>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="ct-about-panel">
+            <div>
+              <strong> 01 </strong>
+
+              <span> Müşterinizi oluşturun </span>
+            </div>
+
+            <div>
+              <strong> 02 </strong>
+
+              <span> Görüşmenizi kaydedin </span>
+            </div>
+
+            <div>
+              <strong> 03 </strong>
+
+              <span> Satış fırsatınızı yönetin </span>
+            </div>
+
+            <div>
+              <strong> 04 </strong>
+
+              <span> Takiplerinizi kaçırmayın </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+     FİYATLANDIRMA / CTA
+========================= -->
+  <section class="ct-pricing-section" id="fiyatlandirma">
+    <div class="ct-container">
+      <div class="ct-pricing-box">
+        <div>
+          <span class="ct-section-label"> BAŞLAMAYA HAZIR MISINIZ? </span>
+
+          <h2>Müşterilerinizi daha düzenli yönetin.</h2>
+
+          <p>
+            ClientTrack ile müşteri ve satış sürecinizi tek bir yerde toplamaya
+            başlayın.
+          </p>
+        </div>
+
+        <a href="{% url 'accounts:register' %}" class="btn btn-clienttrack">
+          Ücretsiz Başla
+        </a>
+      </div>
+    </div>
+  </section>
 </main>
-
 
 <!-- =========================
      FOOTER
 ========================= -->
-<footer
-    class="ct-footer"
-    id="iletisim"
->
+<footer class="ct-footer" id="iletisim">
+  <div class="ct-container">
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <a class="ct-brand ct-footer-brand" href="/">
+          <span class="ct-logo"> C </span>
 
-    <div class="ct-container">
+          <span> ClientTrack </span>
+        </a>
 
-        <div class="row g-5">
+        <p class="ct-footer-text">
+          Müşteri ilişkilerinizi, görüşmelerinizi ve satış fırsatlarınızı tek
+          yerde yönetin.
+        </p>
+      </div>
 
-            <div class="col-lg-5">
+      <div class="col-6 col-lg-2">
+        <h6>Ürün</h6>
 
-                <a
-                    class="ct-brand ct-footer-brand"
-                    href="/"
-                >
-                    <span class="ct-logo">
-                        C
-                    </span>
+        <a href="#ozellikler"> Özellikler </a>
 
-                    <span>
-                        ClientTrack
-                    </span>
-                </a>
+        <a href="#fiyatlandirma"> Fiyatlandırma </a>
 
-                <p class="ct-footer-text">
-                    Müşteri ilişkilerinizi,
-                    görüşmelerinizi ve satış fırsatlarınızı
-                    tek yerde yönetin.
-                </p>
+        <a href="#guvenlik"> Güvenlik </a>
+      </div>
 
-            </div>
+      <div class="col-6 col-lg-2">
+        <h6>Hesap</h6>
 
+        <a href="{% url 'accounts:login' %}"> Giriş Yap </a>
 
-            <div class="col-6 col-lg-2">
+        <a href="{% url 'accounts:register' %}"> Kayıt Ol </a>
+      </div>
 
-                <h6>
-                    Ürün
-                </h6>
+      <div class="col-lg-3">
+        <h6>ClientTrack</h6>
 
-                <a href="#ozellikler">
-                    Özellikler
-                </a>
+        <p>Django Backend Mini CRM Projesi</p>
 
-                <a href="#fiyatlandirma">
-                    Fiyatlandırma
-                </a>
-
-                <a href="#guvenlik">
-                    Güvenlik
-                </a>
-
-            </div>
-
-
-            <div class="col-6 col-lg-2">
-
-                <h6>
-                    Hesap
-                </h6>
-
-                <a href="/accounts/login/">
-                    Giriş Yap
-                </a>
-
-                <a href="/accounts/register/">
-                    Kayıt Ol
-                </a>
-
-            </div>
-
-
-            <div class="col-lg-3">
-
-                <h6>
-                    ClientTrack
-                </h6>
-
-                <p>
-                    Django Backend Mini CRM Projesi
-                </p>
-
-                <p>
-                    Python • Django • PostgreSQL
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="ct-footer-bottom">
-
-            <span>
-                © 2026 ClientTrack.
-                Tüm hakları saklıdır.
-            </span>
-
-            <span>
-                Django Backend Project
-            </span>
-
-        </div>
-
+        <p>Python • Django • PostgreSQL</p>
+      </div>
     </div>
 
+    <div class="ct-footer-bottom">
+      <span> © 2026 ClientTrack. Tüm hakları saklıdır. </span>
+
+      <span> Django Backend Project </span>
+    </div>
+  </div>
 </footer>
 
 {% endblock %}

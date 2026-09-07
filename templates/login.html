@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Giriş Yap | ClientTrack{% endblock %}
+
+{% block content %}
+
+<section class="ct-auth-page">
+
+    <div class="ct-auth-shell">
+
+        <!-- SOL PANEL -->
+        <div class="ct-auth-brand-panel">
+
+            <a
+                href="{% url 'core:home' %}"
+                class="ct-brand ct-auth-brand"
+            >
+                <span class="ct-logo">C</span>
+                <span>ClientTrack</span>
+            </a>
+
+            <div class="ct-auth-brand-content">
+
+                <span class="ct-section-label">
+                    CLIENTTRACK MINI CRM
+                </span>
+
+                <h1>
+                    Tekrar hoş geldiniz.
+                </h1>
+
+                <p>
+                    Müşterilerinize, görüşmelerinize,
+                    satış fırsatlarınıza ve takiplerinize
+                    kaldığınız yerden devam edin.
+                </p>
+
+                <div class="ct-auth-benefits">
+
+                    <div>
+                        <span>✓</span>
+                        Müşterilerinizi tek yerden yönetin
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Görüşme ve takiplerinizi kaçırmayın
+                    </div>
+
+                    <div>
+                        <span>✓</span>
+                        Verileriniz kullanıcı bazında izole edilir
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAĞ PANEL -->
+        <div class="ct-auth-form-panel">
+
+            <div class="ct-auth-form-box">
+
+                <div class="ct-auth-heading">
+
+                    <h2>
+                        Giriş Yap
+                    </h2>
+
+                    <p>
+                        ClientTrack hesabınıza giriş yapın.
+                    </p>
+
+                </div>
+
+
+                <form method="post" novalidate>
+
+                    {% csrf_token %}
+
+
+                    <!-- LOGIN GENEL HATALARI -->
+                    {% if form.non_field_errors %}
+
+                        <div class="ct-form-alert">
+
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- KULLANICI ADI -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.username.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            Kullanıcı Adı
+                        </label>
+
+                        <input
+                            type="text"
+                            name="{{ form.username.html_name }}"
+                            id="{{ form.username.id_for_label }}"
+                            class="form-control ct-form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            value="{{ form.username.value|default:'' }}"
+                            autocomplete="username"
+                            autofocus
+                        >
+
+                        {% for error in form.username.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- PAROLA -->
+                    <div class="ct-form-group">
+
+                        <label
+                            for="{{ form.password.id_for_label }}"
+                            class="ct-form-label"
+                        >
+                            Parola
+                        </label>
+
+                        <input
+                            type="password"
+                            name="{{ form.password.html_name }}"
+                            id="{{ form.password.id_for_label }}"
+                            class="form-control ct-form-control {% if form.password.errors %}is-invalid{% endif %}"
+                            autocomplete="current-password"
+                        >
+
+                        {% for error in form.password.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-clienttrack ct-auth-submit"
+                    >
+                        Giriş Yap
+                    </button>
+
+                </form>
+
+
+                <div class="ct-auth-switch">
+
+                    Henüz hesabınız yok mu?
+
+                    <a href="{% url 'accounts:register' %}">
+                        Ücretsiz Başla
+                    </a>
+
+                </div>
+
+
+                <div class="ct-auth-home-link">
+
+                    <a href="{% url 'core:home' %}">
+                        ← Ana Sayfaya Dön
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
