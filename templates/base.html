@@ -1,37 +1,115 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ClientTrack{% endblock %}</title>
 
-    <title>
-        {% block title %}ClientTrack{% endblock %}
-    </title>
-
-    <!-- Bootstrap 5 -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-    <!-- Project CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
     {% block extra_css %}{% endblock %}
 </head>
-
 <body>
+    <nav class="navbar navbar-expand-lg ct-navbar">
+        <div class="ct-container">
+            <a class="navbar-brand ct-brand" href="{% url 'core:home' %}">
+                <span class="ct-logo">C</span>
+                <span>ClientTrack</span>
+            </a>
 
-    {% block content %}
-    {% endblock %}
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#clientTrackNavbar"
+                aria-controls="clientTrackNavbar"
+                aria-expanded="false"
+                aria-label="Menüyü Aç"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
-    </script>
+            <div class="collapse navbar-collapse" id="clientTrackNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:home' %}#ozellikler">Özellikler</a>
+                    </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:home' %}#fiyatlandirma">Fiyatlandırma</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Kaynaklar
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'core:home' %}#neden-clienttrack">
+                                    Neden ClientTrack?
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'core:home' %}#guvenlik">
+                                    Veri Güvenliği
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'core:home' %}#iletisim">
+                                    İletişim
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item ms-lg-2">
+                            <span class="nav-link ct-login-link">
+                                {% if user.first_name or user.last_name %}
+                                    {{ user.first_name }} {{ user.last_name }}
+                                {% else %}
+                                    {{ user.username }}
+                                {% endif %}
+                            </span>
+                        </li>
+
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-clienttrack ct-navbar-button">
+                                    Çıkış Yap
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-2">
+                            <a class="nav-link ct-login-link" href="{% url 'accounts:login' %}">
+                                Giriş Yap
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="btn btn-clienttrack ct-navbar-button" href="{% url 'accounts:register' %}">
+                                Ücretsiz Başla
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
-
 </body>
 </html>

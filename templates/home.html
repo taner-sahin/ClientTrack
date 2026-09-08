@@ -1,122 +1,14 @@
-{% extends "base.html" %} {% block title %} ClientTrack | Mini CRM{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}ClientTrack | Mini CRM{% endblock %}
+
 {% block content %}
 
-<!-- =========================
-     NAVBAR
-========================= -->
-<nav class="navbar navbar-expand-lg ct-navbar">
-  <div class="ct-container">
-    <a class="navbar-brand ct-brand" href="{% url 'core:home' %}">
-      <span class="ct-logo">C</span>
-      <span>ClientTrack</span>
-    </a>
-
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#clientTrackNavbar"
-      aria-controls="clientTrackNavbar"
-      aria-expanded="false"
-      aria-label="Menüyü Aç"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="clientTrackNavbar">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
-        <li class="nav-item">
-          <a class="nav-link" href="#ozellikler"> Özellikler </a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="#fiyatlandirma"> Fiyatlandırma </a>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-          >
-            Kaynaklar
-          </a>
-
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <a class="dropdown-item" href="#neden-clienttrack">
-                Neden ClientTrack?
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="#guvenlik"> Veri Güvenliği </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="#iletisim"> İletişim </a>
-            </li>
-          </ul>
-        </li>
-
-        {% if user.is_authenticated %}
-
-        <li class="nav-item ms-lg-2">
-          <span class="nav-link ct-login-link">
-            {% if user.first_name or user.last_name %}
-             {{ user.first_name }}
-              {{user.last_name }} 
-               {% else %} 
-               {{ user.username }} 
-               {% endif %}
-          </span>
-        </li>
-
-        <li class="nav-item">
-          <form
-            method="post"
-            action="{% url 'accounts:logout' %}"
-            class="d-inline"
-          >
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-clienttrack ct-navbar-button">
-              Çıkış Yap
-            </button>
-          </form>
-        </li>
-
-        {% else %}
-
-        <li class="nav-item ms-lg-2">
-          <a class="nav-link ct-login-link" href="{% url 'accounts:login' %}">
-            Giriş Yap
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="btn btn-clienttrack ct-navbar-button"
-            href="{% url 'accounts:register' %}"
-          >
-            Ücretsiz Başla
-          </a>
-        </li>
-
-        {% endif %}
-      </ul>
-    </div>
-  </div>
-</nav>
-<!-- =========================
-     HERO
-========================= -->
 <main>
   <section class="ct-hero">
     <div class="ct-container">
       <div class="row align-items-center g-5">
-        <!-- SOL TARAF -->
+
         <div class="col-lg-5">
           <div class="ct-eyebrow">
             Mini CRM
@@ -146,7 +38,7 @@
 
           <div class="d-flex flex-wrap gap-3 mt-4">
             <a
-              href="/accounts/register/"
+              href="{% url 'accounts:register' %}"
               class="btn btn-clienttrack ct-hero-btn"
             >
               Ücretsiz Başla
@@ -178,10 +70,9 @@
           </div>
         </div>
 
-        <!-- SAĞ TARAF -->
         <div class="col-lg-7">
           <div class="ct-product-showcase">
-            <!-- DESKTOP DASHBOARD -->
+
             <div class="ct-dashboard-preview">
               <div class="ct-dashboard-top">
                 <div class="ct-preview-dots">
@@ -296,7 +187,6 @@
               </div>
             </div>
 
-            <!-- MOBİL PREVIEW -->
             <div class="ct-phone-preview">
               <div class="ct-phone-notch"></div>
 
@@ -355,22 +245,34 @@
     </div>
   </section>
 
-  <!-- =========================
-     ÖZELLİKLER
-========================= -->
   <section class="ct-features" id="ozellikler">
     <div class="ct-container">
       <div class="row g-4">
-        <div class="col-md-6 col-xl-3">
-          <article class="ct-feature-card">
+       <div class="col-md-6 col-xl-3">
+    {% if user.is_authenticated %}
+        <a
+            href="{% url 'clients:list' %}"
+            class="d-block h-100 text-reset"
+        >
+    {% else %}
+        <a
+            href="{% url 'accounts:login' %}"
+            class="d-block h-100 text-reset"
+        >
+    {% endif %}
+
+        <article class="ct-feature-card">
             <div class="ct-feature-icon">👥</div>
 
             <h3>Müşteri Yönetimi</h3>
 
-            <p>Tüm müşteri bilgilerinizi tek yerde toplayın ve düzenleyin.</p>
-          </article>
-        </div>
+            <p>
+                Tüm müşteri bilgilerinizi tek yerde toplayın ve düzenleyin.
+            </p>
+        </article>
 
+    </a>
+</div>
         <div class="col-md-6 col-xl-3">
           <article class="ct-feature-card">
             <div class="ct-feature-icon">☎</div>
@@ -443,9 +345,6 @@
     </div>
   </section>
 
-  <!-- =========================
-     NEDEN CLIENTTRACK
-========================= -->
   <section class="ct-about-section" id="neden-clienttrack">
     <div class="ct-container">
       <div class="row align-items-center g-5">
@@ -494,9 +393,6 @@
     </div>
   </section>
 
-  <!-- =========================
-     FİYATLANDIRMA / CTA
-========================= -->
   <section class="ct-pricing-section" id="fiyatlandirma">
     <div class="ct-container">
       <div class="ct-pricing-box">
@@ -519,14 +415,11 @@
   </section>
 </main>
 
-<!-- =========================
-     FOOTER
-========================= -->
 <footer class="ct-footer" id="iletisim">
   <div class="ct-container">
     <div class="row g-5">
       <div class="col-lg-5">
-        <a class="ct-brand ct-footer-brand" href="/">
+        <a class="ct-brand ct-footer-brand" href="{% url 'core:home' %}">
           <span class="ct-logo"> C </span>
 
           <span> ClientTrack </span>

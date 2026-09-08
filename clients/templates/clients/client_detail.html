@@ -1,80 +1,33 @@
 {% extends "base.html" %}
-
-
-{% block title %}{{ client.name }} | ClientTrack{%endblock %} 
+{% block title %}{{ client.name }} | ClientTrack{% endblock %}
 
 {% block content %}
-
 <section class="ct-client-page">
-  <div class="ct-client-form-shell">
-    <div class="ct-client-page-header">
-      <div>
-        <span class="ct-section-label"> MÜŞTERİ DETAYI </span>
+    <div class="ct-client-form-shell">
+        <div class="ct-client-page-header">
+            <div>
+                <span class="ct-section-label">MÜŞTERİ DETAYI</span>
+                <h1>{{ client.name }}</h1>
+                <p>Müşteri bilgilerini görüntüleyin.</p>
+            </div>
+            <a href="{% url 'clients:list' %}" class="ct-client-back-link">← Müşterilere Dön</a>
+        </div>
 
-        <h1>{{ client.name }}</h1>
+        <div class="ct-client-card">
+            <div class="ct-client-detail-grid">
+                <div><strong>E-posta</strong><p>{{ client.email|default:"Belirtilmedi" }}</p></div>
+                <div><strong>Telefon</strong><p>{{ client.phone|default:"Belirtilmedi" }}</p></div>
+                <div><strong>Web Sitesi</strong><p>{{ client.website|default:"Belirtilmedi" }}</p></div>
+                <div><strong>Adres</strong><p>{{ client.address|default:"Belirtilmedi" }}</p></div>
+                <div class="ct-client-detail-wide"><strong>Notlar</strong><p>{{ client.notes|default:"Not bulunmuyor." }}</p></div>
+                <div class="ct-client-detail-wide"><strong>Oluşturulma</strong><p>{{ client.created_at|date:"d.m.Y H:i" }}</p></div>
+            </div>
 
-        <p>Müşteri bilgilerini görüntüleyin.</p>
-      </div>
-
-      <a href="{% url 'clients:list' %}" class="ct-client-back-link">
-        ← Müşterilere Dön
-      </a>
+            <div class="ct-client-actions">
+                <a href="{% url 'clients:update' client.pk %}" class="btn btn-clienttrack">Müşteriyi Düzenle</a>
+                <a href="{% url 'clients:delete' client.pk %}" class="ct-danger-btn">Müşteriyi Sil</a>
+            </div>
+        </div>
     </div>
-
-    <div class="ct-client-card">
-      <div class="mb-4">
-        <strong>E-posta</strong>
-        <p class="text-muted mb-0">{{ client.email|default:"Belirtilmedi" }}</p>
-      </div>
-
-      <div class="mb-4">
-        <strong>Telefon</strong>
-        <p class="text-muted mb-0">{{ client.phone|default:"Belirtilmedi" }}</p>
-      </div>
-
-      <div class="mb-4">
-        <strong>Web Sitesi</strong>
-        <p class="text-muted mb-0">
-          {{ client.website|default:"Belirtilmedi" }}
-        </p>
-      </div>
-
-      <div class="mb-4">
-        <strong>Adres</strong>
-        <p class="text-muted mb-0">
-          {{ client.address|default:"Belirtilmedi" }}
-        </p>
-      </div>
-
-      <div class="mb-4">
-        <strong>Notlar</strong>
-        <p class="text-muted mb-0">
-          {{ client.notes|default:"Not bulunmuyor." }}
-        </p>
-      </div>
-
-      <div>
-        <strong>Oluşturulma</strong>
-        <p class="text-muted mb-0">{{ client.created_at|date:"d.m.Y H:i" }}</p>
-      </div>
-
-      <div class="ct-client-detail-actions">
-        <a
-          href="{% url 'clients:update' client.pk %}"
-          class="btn btn-clienttrack"
-        >
-          Müşteriyi Düzenle
-        </a>
-
-        <a
-          href="{% url 'clients:delete' client.pk %}"
-          class="ct-client-delete-btn"
-        >
-          Müşteriyi Sil
-        </a>
-      </div>
-    </div>
-  </div>
 </section>
-
 {% endblock %}

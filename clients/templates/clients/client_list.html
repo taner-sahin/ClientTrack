@@ -1,83 +1,49 @@
-{% extends "base.html" %} 
-
-{% block title %}Müşteriler | ClientTrack{% endblock%} 
+{% extends "base.html" %}
+{% block title %}Müşteriler | ClientTrack{% endblock %}
 
 {% block content %}
-
 <section class="ct-client-page">
-  <div class="ct-client-list-shell">
-    <div class="ct-client-page-header">
-      <div>
-        <span class="ct-section-label"> CLIENTTRACK CRM </span>
+    <div class="ct-client-list-shell">
+        <div class="ct-client-page-header">
+            <div>
+                <span class="ct-section-label">CLIENTTRACK CRM</span>
+                <h1>Müşteriler</h1>
+                <p>Müşteri kayıtlarınızı tek yerden yönetin.</p>
+            </div>
+            <a href="{% url 'clients:create' %}" class="btn btn-clienttrack">+ Yeni Müşteri</a>
+        </div>
 
-        <h1>Müşteriler</h1>
-
-        <p>Müşteri kayıtlarınızı tek yerden yönetin.</p>
-      </div>
-
-      <a href="{% url 'clients:create' %}" class="btn btn-clienttrack">
-        + Yeni Müşteri
-      </a>
+        {% if clients %}
+            <div class="ct-client-table-card table-responsive">
+                <table class="table align-middle mb-0 ct-client-table">
+                    <thead>
+                        <tr>
+                            <th>Müşteri</th>
+                            <th>E-posta</th>
+                            <th>Telefon</th>
+                            <th>Oluşturulma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in clients %}
+                            <tr>
+                                <td><a href="{% url 'clients:detail' client.pk %}"><strong>{{ client.name }}</strong></a></td>
+                                <td>{{ client.email|default:"-" }}</td>
+                                <td>{{ client.phone|default:"-" }}</td>
+                                <td>{{ client.created_at|date:"d.m.Y H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="ct-client-empty">
+                <div class="ct-client-empty-icon">C</div>
+                <h2>Henüz müşteriniz yok.</h2>
+                <p>İlk müşteri kaydınızı oluşturarak ClientTrack'i kullanmaya başlayın.</p>
+                <a href="{% url 'clients:create' %}" class="btn btn-clienttrack">İlk Müşteriyi Oluştur</a>
+            </div>
+        {% endif %}
     </div>
-
-    {% if clients %}
-
-    <div class="ct-client-table-card">
-      <div class="table-responsive">
-        <table class="table align-middle mb-0 ct-client-table">
-          <thead>
-            <tr>
-              <th>Müşteri</th>
-              <th>E-posta</th>
-              <th>Telefon</th>
-              <th>Oluşturulma</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for client in clients %}
-
-            <tr>
-              <td>
-                <a
-                  href="{% url 'clients:detail' client.pk %}"
-                  class="text-decoration-none"
-                >
-                  <strong> {{ client.name }} </strong>
-                </a>
-              </td>
-
-              <td>{{ client.email|default:"-" }}</td>
-
-              <td>{{ client.phone|default:"-" }}</td>
-
-              <td>{{ client.created_at|date:"d.m.Y H:i" }}</td>
-            </tr>
-
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    {% else %}
-
-    <div class="ct-client-empty">
-      <div class="ct-client-empty-icon">C</div>
-
-      <h2>Henüz müşteriniz yok.</h2>
-
-      <p>
-        İlk müşteri kaydınızı oluşturarak ClientTrack'i kullanmaya başlayın.
-      </p>
-
-      <a href="{% url 'clients:create' %}" class="btn btn-clienttrack">
-        İlk Müşteriyi Oluştur
-      </a>
-    </div>
-
-    {% endif %}
-  </div>
 </section>
-
 {% endblock %}
