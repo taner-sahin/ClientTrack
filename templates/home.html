@@ -274,16 +274,19 @@
     </a>
 </div>
         <div class="col-md-6 col-xl-3">
-          <article class="ct-feature-card">
-            <div class="ct-feature-icon">☎</div>
+  <a
+    href="{% if user.is_authenticated %}{% url 'interactions:list' %}{% else %}{% url 'accounts:login' %}{% endif %}"
+    class="ct-feature-card text-decoration-none text-reset d-block"
+  >
+    <div class="ct-feature-icon">☎</div>
 
-            <h3>Görüşme Takibi</h3>
+    <h3>Görüşme Takibi</h3>
 
-            <p>Telefon, e-posta, notlar ve görüşmeleri kolayca takip edin.</p>
-          </article>
-        </div>
+    <p>Telefon, e-posta, notlar ve görüşmeleri kolayca takip edin.</p>
+  </a>
+</div>
 
-        <div class="col-md-6 col-xl-3">
+<div class="col-md-6 col-xl-3">
           <article class="ct-feature-card">
             <div class="ct-feature-icon ct-feature-orange">▽</div>
 

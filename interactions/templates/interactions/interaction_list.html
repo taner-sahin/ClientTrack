@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Görüşme Takibi</h1>
+            <p class="text-muted mb-0">
+                Müşterilerinizle yaptığınız görüşmeleri yönetin.
+            </p>
+        </div>
+
+        <a href="{% url 'interactions:create' %}" class="btn btn-primary">
+            Yeni Görüşme
+        </a>
+    </div>
+
+    {% if interactions %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Müşteri</th>
+                        <th>Tür</th>
+                        <th>Konu</th>
+                        <th>Görüşme Tarihi</th>
+                        <th>Takip Tarihi</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for interaction in interactions %}
+                        <tr>
+                            <td>{{ interaction.client.name }}</td>
+
+                            <td>
+                                {{ interaction.get_interaction_type_display }}
+                            </td>
+
+                            <td>{{ interaction.subject }}</td>
+
+                            <td>
+                                {{ interaction.interaction_date|date:"d.m.Y H:i" }}
+                            </td>
+
+                            <td>
+                                {% if interaction.follow_up_date %}
+                                    {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td class="text-end">
+                                <a
+                                    href="{% url 'interactions:detail' interaction.pk %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Detay
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="alert alert-light border">
+            Henüz görüşme kaydı bulunmuyor.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

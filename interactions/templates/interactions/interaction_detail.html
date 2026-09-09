@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h1 class="h4 mb-1">{{ interaction.subject }}</h1>
+                            <p class="text-muted mb-0">
+                                {{ interaction.client.name }}
+                            </p>
+                        </div>
+
+                        <span class="badge text-bg-light">
+                            {{ interaction.get_interaction_type_display }}
+                        </span>
+                    </div>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Görüşme Tarihi</dt>
+                        <dd class="col-sm-8">
+                            {{ interaction.interaction_date|date:"d.m.Y H:i" }}
+                        </dd>
+
+                        <dt class="col-sm-4">Takip Tarihi</dt>
+                        <dd class="col-sm-8">
+                            {% if interaction.follow_up_date %}
+                                {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Notlar</dt>
+                        <dd class="col-sm-8">
+                            {% if interaction.notes %}
+                                {{ interaction.notes|linebreaksbr }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                    <div class="d-flex gap-2">
+                        <a
+                            href="{% url 'interactions:update' interaction.pk %}"
+                            class="btn btn-primary"
+                        >
+                            Düzenle
+                        </a>
+
+                        <a
+                            href="{% url 'interactions:delete' interaction.pk %}"
+                            class="btn btn-outline-danger"
+                        >
+                            Sil
+                        </a>
+
+                        <a
+                            href="{% url 'interactions:list' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Görüşmelere Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
