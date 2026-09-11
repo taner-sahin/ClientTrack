@@ -287,15 +287,19 @@
 </div>
 
 <div class="col-md-6 col-xl-3">
-          <article class="ct-feature-card">
-            <div class="ct-feature-icon ct-feature-orange">▽</div>
+         
+  <a
+    href="{% if user.is_authenticated %}{% url 'sales:list' %}{% else %}{% url 'accounts:login' %}{% endif %}"
+    class="ct-feature-card text-decoration-none text-reset d-block"
+  >
+    <div class="ct-feature-icon ct-feature-orange">▽</div>
 
-            <h3>Satış Hattı</h3>
+    <h3>Satış Hattı</h3>
 
-            <p>
-              Deals pipeline’ınızı görselleştirin ve satış sürecinizi yönetin.
-            </p>
-          </article>
+    <p>
+      Deals pipeline’ınızı görselleştirin ve satış sürecinizi yönetin.
+    </p>
+  </a>
         </div>
 
         <div class="col-md-6 col-xl-3">

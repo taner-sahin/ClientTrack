@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h1 class="h4 mb-1">{{ deal.title }}</h1>
+                            <p class="text-muted mb-0">
+                                {{ deal.client.name }}
+                            </p>
+                        </div>
+
+                        <span class="badge text-bg-light">
+                            {{ deal.get_stage_display }}
+                        </span>
+                    </div>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Tutar</dt>
+                        <dd class="col-sm-8">{{ deal.value }}</dd>
+
+                        <dt class="col-sm-4">Tahmini Kapanış</dt>
+                        <dd class="col-sm-8">
+                            {% if deal.expected_close_date %}
+                                {{ deal.expected_close_date|date:"d.m.Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Notlar</dt>
+                        <dd class="col-sm-8">
+                            {% if deal.notes %}
+                                {{ deal.notes|linebreaksbr }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                    <div class="d-flex gap-2">
+                        <a
+                            href="{% url 'sales:update' deal.pk %}"
+                            class="btn btn-primary"
+                        >
+                            Düzenle
+                        </a>
+
+                        <a
+                            href="{% url 'sales:delete' deal.pk %}"
+                            class="btn btn-outline-danger"
+                        >
+                            Sil
+                        </a>
+
+                        <a
+                            href="{% url 'sales:list' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Satış Hattına Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

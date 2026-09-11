@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Satış Hattı</h1>
+            <p class="text-muted mb-0">
+                Satış fırsatlarınızı ve aşamalarını yönetin.
+            </p>
+        </div>
+
+        <a href="{% url 'sales:create' %}" class="btn btn-primary">
+            Yeni Satış Fırsatı
+        </a>
+    </div>
+
+    {% if deals %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Müşteri</th>
+                        <th>Fırsat</th>
+                        <th>Aşama</th>
+                        <th>Tutar</th>
+                        <th>Tahmini Kapanış</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for deal in deals %}
+                        <tr>
+                            <td>{{ deal.client.name }}</td>
+                            <td>{{ deal.title }}</td>
+                            <td>{{ deal.get_stage_display }}</td>
+                            <td>{{ deal.value }}</td>
+
+                            <td>
+                                {% if deal.expected_close_date %}
+                                    {{ deal.expected_close_date|date:"d.m.Y" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td class="text-end">
+                                <a
+                                    href="{% url 'sales:detail' deal.pk %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Detay
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-light border">
+            Henüz satış fırsatı bulunmuyor.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
