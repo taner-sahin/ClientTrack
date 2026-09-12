@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Raporlama</h1>
+    <p class="text-muted mb-0">
+      Müşteri, görüşme ve satış verilerinizi tek ekranda inceleyin.
+    </p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100 bg-primary-subtle">
+        <div class="card-body">
+          <p class="text-muted mb-1">Toplam Müşteri</p>
+          <h2 class="display-6 fw-bold mb-0">{{ total_clients }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100 bg-info-subtle">
+        <div class="card-body">
+          <p class="text-muted mb-1">Toplam Görüşme</p>
+          <h2 class="display-6 fw-bold mb-0">{{ total_interactions }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100 bg-warning-subtle">
+        <div class="card-body">
+          <p class="text-muted mb-1">Toplam Satış Fırsatı</p>
+          <h2 class="display-6 fw-bold mb-0">{{ total_deals }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card border-0 shadow-sm h-100 bg-success-subtle">
+        <div class="card-body">
+          <p class="text-muted mb-1">Toplam Pipeline Değeri</p>
+          <h2 class="h3 fw-bold mb-0">
+            ₺{{ total_pipeline_value|floatformat:2 }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-warning border-2 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted mb-1">Açık Fırsatlar</p>
+          <h3 class="h2 fw-bold text-warning-emphasis mb-0">
+            {{ open_deals }}
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-success border-2 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted mb-1">Kazanılan</p>
+          <h3 class="h2 fw-bold text-success mb-0">
+            {{ won_deals }}
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-danger border-2 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted mb-1">Kaybedilen</p>
+          <h3 class="h2 fw-bold text-danger mb-0">
+            {{ lost_deals }}
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 fw-bold mb-3">Satış Aşamaları</h2>
+
+          {% if stage_summary %}
+            <ul class="list-group list-group-flush">
+
+              {% for item in stage_summary %}
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+
+                  <span>
+                    {% if item.stage == "lead" %}
+                      Potansiyel
+                    {% elif item.stage == "qualified" %}
+                      Nitelikli
+                    {% elif item.stage == "proposal" %}
+                      Teklif
+                    {% elif item.stage == "negotiation" %}
+                      Müzakere
+                    {% elif item.stage == "won" %}
+                      Kazanıldı
+                    {% elif item.stage == "lost" %}
+                      Kaybedildi
+                    {% else %}
+                      {{ item.stage }}
+                    {% endif %}
+                  </span>
+
+                  <span class="badge text-bg-primary rounded-pill">
+                    {{ item.total }}
+                  </span>
+
+                </li>
+              {% endfor %}
+
+            </ul>
+          {% else %}
+            <p class="text-muted mb-0">
+              Henüz satış verisi bulunmuyor.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 fw-bold mb-3">Yaklaşan Takipler</h2>
+
+          {% if upcoming_followups %}
+            <ul class="list-group list-group-flush">
+
+              {% for interaction in upcoming_followups %}
+                <li class="list-group-item px-0 py-3">
+                  <strong>{{ interaction.client.name }}</strong>
+
+                  <div class="text-muted mt-1">
+                    {{ interaction.subject }}
+                    <span class="mx-1">•</span>
+                    {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                  </div>
+                </li>
+              {% endfor %}
+
+            </ul>
+          {% else %}
+            <p class="text-muted mb-0">
+              Yaklaşan takip bulunmuyor.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+      <h2 class="h5 fw-bold mb-3">Son Görüşmeler</h2>
+
+      {% if recent_interactions %}
+        <div class="table-responsive">
+
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Müşteri</th>
+                <th>Konu</th>
+                <th>Tür</th>
+                <th>Tarih</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for interaction in recent_interactions %}
+                <tr>
+                  <td class="fw-semibold">
+                    {{ interaction.client.name }}
+                  </td>
+
+                  <td>
+                    {{ interaction.subject }}
+                  </td>
+
+                  <td>
+                    <span class="badge text-bg-light">
+                      {{ interaction.get_interaction_type_display }}
+                    </span>
+                  </td>
+
+                  <td>
+                    {{ interaction.interaction_date|date:"d.m.Y H:i" }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+      {% else %}
+        <p class="text-muted mb-0">
+          Henüz görüşme kaydı bulunmuyor.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
