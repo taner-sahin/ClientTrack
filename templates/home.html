@@ -265,11 +265,16 @@
         </div>
 
         <div class="col-lg-4">
-          <article class="ct-feature-card ct-feature-large">
-            <div class="ct-feature-icon">👥</div>
-            <h3>Takım Yönetimi</h3>
-            <p>Ekibinizle paylaşın, yetkilendirin ve birlikte büyüyün.</p>
-          </article>
+          <a
+            href="{% if user.is_authenticated %}{% url 'accounts:team_member_list' %}{% else %}{% url 'accounts:login' %}{% endif %}"
+            class="text-decoration-none text-reset d-block h-100"
+          >
+            <article class="ct-feature-card ct-feature-large h-100">
+              <div class="ct-feature-icon">👥</div>
+              <h3>Takım Yönetimi</h3>
+              <p>Ekibinizle paylaşın, yetkilendirin ve birlikte büyüyün.</p>
+            </article>
+          </a>
         </div>
 
         <div class="col-lg-4">

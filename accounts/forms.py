@@ -1,9 +1,11 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User
+from .models import TeamMember, User
 
 
 class RegisterForm(UserCreationForm):
+
     class Meta:
         model = User
         fields = (
@@ -11,4 +13,16 @@ class RegisterForm(UserCreationForm):
             "email",
             "first_name",
             "last_name",
+        )
+
+
+class TeamMemberForm(forms.ModelForm):
+
+    class Meta:
+        model = TeamMember
+        fields = (
+            "name",
+            "email",
+            "role",
+            "is_active",
         )

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-4">
+                        {{ team_member.name }}
+                    </h1>
+
+                    <p>
+                        <strong>E-posta:</strong>
+                        {{ team_member.email }}
+                    </p>
+
+                    <p>
+                        <strong>Rol:</strong>
+                        {{ team_member.get_role_display }}
+                    </p>
+
+                    <p>
+                        <strong>Durum:</strong>
+
+                        {% if team_member.is_active %}
+                            <span class="badge bg-success">
+                                Aktif
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                Pasif
+                            </span>
+                        {% endif %}
+                    </p>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a
+                            href="{% url 'accounts:team_member_update' team_member.pk %}"
+                            class="btn btn-primary"
+                        >
+                            Düzenle
+                        </a>
+
+                        <a
+                            href="{% url 'accounts:team_member_delete' team_member.pk %}"
+                            class="btn btn-outline-danger"
+                        >
+                            Sil
+                        </a>
+
+                        <a
+                            href="{% url 'accounts:team_member_list' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Listeye Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

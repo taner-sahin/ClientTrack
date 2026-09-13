@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Takım Yönetimi</h1>
+
+        <a
+            href="{% url 'accounts:team_member_create' %}"
+            class="btn btn-primary"
+        >
+            Takım Üyesi Ekle
+        </a>
+    </div>
+
+    {% if team_members %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Ad</th>
+                        <th>E-posta</th>
+                        <th>Rol</th>
+                        <th>Durum</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for member in team_members %}
+                        <tr>
+                            <td>{{ member.name }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.get_role_display }}</td>
+
+                            <td>
+                                {% if member.is_active %}
+                                    <span class="badge bg-success">
+                                        Aktif
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Pasif
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-end">
+                                <a
+                                    href="{% url 'accounts:team_member_detail' member.pk %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Detay
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-light border">
+            Henüz takım üyesi eklenmedi.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
