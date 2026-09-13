@@ -10,4 +10,6 @@ urlpatterns = [
     path("<int:pk>/edit/", views.interaction_update, name="update"),
     path("<int:pk>/delete/", views.interaction_delete, name="delete"),
     path("<int:pk>/", views.interaction_detail, name="detail"),
+    path("reminders/", views.reminder_list, name="reminders"),
+    path("<int:pk>/follow-up-complete/",views.follow_up_complete,name="follow_up_complete",),
 ]

@@ -1,7 +1,4 @@
-{% extends "base.html" %}
-
-{% block title %}ClientTrack | Mini CRM{% endblock %}
-
+{% extends "base.html" %} {% block title %}ClientTrack | Mini CRM{% endblock %}
 {% block content %}
 <main>
   <section class="ct-hero">
@@ -26,13 +23,17 @@
           </p>
 
           <div class="d-flex flex-wrap gap-3 mt-4">
-            <a href="{% url 'accounts:register' %}"
-               class="btn btn-clienttrack ct-hero-btn">
+            <a
+              href="{% url 'accounts:register' %}"
+              class="btn btn-clienttrack ct-hero-btn"
+            >
               Ücretsiz Başla
             </a>
 
-            <a href="#ozellikler"
-               class="btn btn-clienttrack-outline ct-hero-btn">
+            <a
+              href="#ozellikler"
+              class="btn btn-clienttrack-outline ct-hero-btn"
+            >
               Özellikleri İncele
             </a>
           </div>
@@ -202,7 +203,6 @@
   <section class="ct-features" id="ozellikler">
     <div class="ct-container">
       <div class="row g-4">
-
         <div class="col-md-6 col-xl-3">
           <a
             href="{% if user.is_authenticated %}{% url 'clients:list' %}{% else %}{% url 'accounts:login' %}{% endif %}"
@@ -210,9 +210,7 @@
           >
             <div class="ct-feature-icon">👥</div>
             <h3>Müşteri Yönetimi</h3>
-            <p>
-              Tüm müşteri bilgilerinizi tek yerde toplayın ve düzenleyin.
-            </p>
+            <p>Tüm müşteri bilgilerinizi tek yerde toplayın ve düzenleyin.</p>
           </a>
         </div>
 
@@ -223,9 +221,7 @@
           >
             <div class="ct-feature-icon">☎</div>
             <h3>Görüşme Takibi</h3>
-            <p>
-              Telefon, e-posta, notlar ve görüşmeleri kolayca takip edin.
-            </p>
+            <p>Telefon, e-posta, notlar ve görüşmeleri kolayca takip edin.</p>
           </a>
         </div>
 
@@ -249,29 +245,30 @@
           >
             <div class="ct-feature-icon">▣</div>
             <h3>Raporlama</h3>
+            <p>Dashboard ve raporlarla performansınızı ölçün.</p>
+          </a>
+        </div>
+
+        <div class="col-lg-4">
+          <a
+            href="{% if user.is_authenticated %}{% url 'interactions:reminders' %}{% else %}{% url 'accounts:login' %}{% endif %}"
+            class="ct-feature-card ct-feature-large text-decoration-none text-reset d-block h-100"
+          >
+            <div class="ct-feature-icon">🔔</div>
+
+            <h3>Akıllı Hatırlatmalar</h3>
+
             <p>
-              Dashboard ve raporlarla performansınızı ölçün.
+              Önemli görüşme ve görevleri kaçırmadan zamanında aksiyon alın.
             </p>
           </a>
         </div>
 
         <div class="col-lg-4">
           <article class="ct-feature-card ct-feature-large">
-            <div class="ct-feature-icon">🔔</div>
-            <h3>Akıllı Hatırlatmalar</h3>
-            <p>
-              Önemli görüşme ve görevleri kaçırmadan zamanında aksiyon alın.
-            </p>
-          </article>
-        </div>
-
-        <div class="col-lg-4">
-          <article class="ct-feature-card ct-feature-large">
             <div class="ct-feature-icon">👥</div>
             <h3>Takım Yönetimi</h3>
-            <p>
-              Ekibinizle paylaşın, yetkilendirin ve birlikte büyüyün.
-            </p>
+            <p>Ekibinizle paylaşın, yetkilendirin ve birlikte büyüyün.</p>
           </article>
         </div>
 
@@ -288,7 +285,6 @@
             </div>
           </article>
         </div>
-
       </div>
     </div>
   </section>

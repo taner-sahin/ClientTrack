@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Akıllı Hatırlatmalar</h1>
+    <p class="text-muted mb-0">
+      Yaklaşan, geciken ve tamamlanan takiplerinizi yönetin.
+    </p>
+  </div>
+
+  <div class="row g-4">
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 fw-bold mb-3">Yaklaşan Takipler</h2>
+
+          {% if upcoming_followups %}
+            {% for interaction in upcoming_followups %}
+              <div class="border-bottom py-3">
+                <strong>{{ interaction.client.name }}</strong>
+
+                <div class="text-muted mb-2">
+                  {{ interaction.subject }}
+                  •
+                  {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                </div>
+
+                <form
+                  method="post"
+                  action="{% url 'interactions:follow_up_complete' interaction.pk %}"
+                >
+                  {% csrf_token %}
+
+                  <button type="submit" class="btn btn-sm btn-success">
+                    Takibi Tamamla
+                  </button>
+                </form>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted mb-0">
+              Yaklaşan takip bulunmuyor.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-danger shadow-sm h-100">
+        <div class="card-body p-4">
+          <h2 class="h5 fw-bold text-danger mb-3">
+            Geciken Takipler
+          </h2>
+
+          {% if overdue_followups %}
+            {% for interaction in overdue_followups %}
+              <div class="border-bottom py-3">
+                <strong>{{ interaction.client.name }}</strong>
+
+                <div class="text-muted mb-2">
+                  {{ interaction.subject }}
+                  •
+                  {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                </div>
+
+                <form
+                  method="post"
+                  action="{% url 'interactions:follow_up_complete' interaction.pk %}"
+                >
+                  {% csrf_token %}
+
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    Takibi Tamamla
+                  </button>
+                </form>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted mb-0">
+              Geciken takip bulunmuyor.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card border-0 shadow-sm mt-4">
+    <div class="card-body p-4">
+      <h2 class="h5 fw-bold mb-3">Tamamlanan Takipler</h2>
+
+      {% if completed_followups %}
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Müşteri</th>
+                <th>Konu</th>
+                <th>Takip Tarihi</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for interaction in completed_followups %}
+                <tr>
+                  <td>{{ interaction.client.name }}</td>
+                  <td>{{ interaction.subject }}</td>
+                  <td>
+                    {{ interaction.follow_up_date|date:"d.m.Y H:i" }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted mb-0">
+          Henüz tamamlanan takip bulunmuyor.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

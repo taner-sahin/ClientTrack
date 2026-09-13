@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -16,6 +18,7 @@ class InteractionTests(TestCase):
             username="user1",
             password="Testpass123!",
         )
+
         self.user2 = User.objects.create_user(
             username="user2",
             password="Testpass123!",
@@ -25,6 +28,7 @@ class InteractionTests(TestCase):
             user=self.user1,
             name="User 1 Müşterisi",
         )
+
         self.client2 = Client.objects.create(
             user=self.user2,
             name="User 2 Müşterisi",
@@ -91,10 +95,21 @@ class InteractionTests(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("interactions:detail", args=[interaction.pk]),
+            reverse(
+                "interactions:detail",
+                args=[interaction.pk],
+            ),
         )
-        self.assertEqual(interaction.user, self.user1)
-        self.assertEqual(interaction.client, self.client1)
+
+        self.assertEqual(
+            interaction.user,
+            self.user1,
+        )
+
+        self.assertEqual(
+            interaction.client,
+            self.client1,
+        )
 
     def test_user_cannot_create_interaction_for_another_users_client(self):
         self.client.force_login(self.user1)
@@ -111,7 +126,11 @@ class InteractionTests(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
         self.assertFalse(
             Interaction.objects.filter(subject="Yetkisiz Görüşme").exists()
         )
@@ -120,26 +139,45 @@ class InteractionTests(TestCase):
         self.client.force_login(self.user1)
 
         response = self.client.get(
-            reverse("interactions:detail", args=[self.interaction1.pk])
+            reverse(
+                "interactions:detail",
+                args=[self.interaction1.pk],
+            )
         )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.interaction1.subject)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
+        self.assertContains(
+            response,
+            self.interaction1.subject,
+        )
 
     def test_user_cannot_view_another_users_interaction_detail(self):
         self.client.force_login(self.user1)
 
         response = self.client.get(
-            reverse("interactions:detail", args=[self.interaction2.pk])
+            reverse(
+                "interactions:detail",
+                args=[self.interaction2.pk],
+            )
         )
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
 
     def test_user_can_update_own_interaction(self):
         self.client.force_login(self.user1)
 
         response = self.client.post(
-            reverse("interactions:update", args=[self.interaction1.pk]),
+            reverse(
+                "interactions:update",
+                args=[self.interaction1.pk],
+            ),
             {
                 "client": self.client1.pk,
                 "interaction_type": Interaction.InteractionType.MEETING,
@@ -154,19 +192,30 @@ class InteractionTests(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("interactions:detail", args=[self.interaction1.pk]),
+            reverse(
+                "interactions:detail",
+                args=[self.interaction1.pk],
+            ),
         )
+
         self.assertEqual(
             self.interaction1.subject,
             "Güncellenmiş Görüşme",
         )
-        self.assertEqual(self.interaction1.user, self.user1)
+
+        self.assertEqual(
+            self.interaction1.user,
+            self.user1,
+        )
 
     def test_user_cannot_update_another_users_interaction(self):
         self.client.force_login(self.user1)
 
         response = self.client.post(
-            reverse("interactions:update", args=[self.interaction2.pk]),
+            reverse(
+                "interactions:update",
+                args=[self.interaction2.pk],
+            ),
             {
                 "client": self.client1.pk,
                 "interaction_type": Interaction.InteractionType.NOTE,
@@ -179,7 +228,11 @@ class InteractionTests(TestCase):
 
         self.interaction2.refresh_from_db()
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
+
         self.assertEqual(
             self.interaction2.subject,
             "User 2 Görüşmesi",
@@ -189,18 +242,165 @@ class InteractionTests(TestCase):
         self.client.force_login(self.user1)
 
         response = self.client.post(
-            reverse("interactions:delete", args=[self.interaction1.pk])
+            reverse(
+                "interactions:delete",
+                args=[self.interaction1.pk],
+            )
         )
 
-        self.assertRedirects(response, reverse("interactions:list"))
+        self.assertRedirects(
+            response,
+            reverse("interactions:list"),
+        )
+
         self.assertFalse(Interaction.objects.filter(pk=self.interaction1.pk).exists())
 
     def test_user_cannot_delete_another_users_interaction(self):
         self.client.force_login(self.user1)
 
         response = self.client.post(
-            reverse("interactions:delete", args=[self.interaction2.pk])
+            reverse(
+                "interactions:delete",
+                args=[self.interaction2.pk],
+            )
         )
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
+
         self.assertTrue(Interaction.objects.filter(pk=self.interaction2.pk).exists())
+
+    def test_reminder_list_requires_login(self):
+        response = self.client.get(reverse("interactions:reminders"))
+
+        self.assertRedirects(
+            response,
+            f"{reverse('accounts:login')}?next={reverse('interactions:reminders')}",
+        )
+
+    def test_reminder_list_shows_only_logged_in_users_followups(self):
+        self.interaction1.follow_up_date = timezone.now() + timedelta(days=2)
+        self.interaction1.save()
+
+        self.interaction2.follow_up_date = timezone.now() + timedelta(days=2)
+        self.interaction2.save()
+
+        self.client.force_login(self.user1)
+
+        response = self.client.get(reverse("interactions:reminders"))
+
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
+        self.assertContains(
+            response,
+            self.interaction1.subject,
+        )
+
+        self.assertNotContains(
+            response,
+            self.interaction2.subject,
+        )
+
+    def test_reminders_separate_upcoming_and_overdue_followups(self):
+        upcoming = Interaction.objects.create(
+            user=self.user1,
+            client=self.client1,
+            interaction_type=Interaction.InteractionType.PHONE,
+            subject="Yaklaşan Takip",
+            interaction_date=timezone.now(),
+            follow_up_date=timezone.now() + timedelta(days=2),
+        )
+
+        overdue = Interaction.objects.create(
+            user=self.user1,
+            client=self.client1,
+            interaction_type=Interaction.InteractionType.EMAIL,
+            subject="Geciken Takip",
+            interaction_date=timezone.now(),
+            follow_up_date=timezone.now() - timedelta(days=2),
+        )
+
+        self.client.force_login(self.user1)
+
+        response = self.client.get(reverse("interactions:reminders"))
+
+        self.assertIn(
+            upcoming,
+            response.context["upcoming_followups"],
+        )
+
+        self.assertIn(
+            overdue,
+            response.context["overdue_followups"],
+        )
+
+    def test_user_can_complete_own_follow_up(self):
+        self.interaction1.follow_up_date = timezone.now() + timedelta(days=2)
+        self.interaction1.save()
+
+        self.client.force_login(self.user1)
+
+        response = self.client.post(
+            reverse(
+                "interactions:follow_up_complete",
+                args=[self.interaction1.pk],
+            )
+        )
+
+        self.interaction1.refresh_from_db()
+
+        self.assertRedirects(
+            response,
+            reverse("interactions:reminders"),
+        )
+
+        self.assertTrue(self.interaction1.follow_up_completed)
+
+    def test_user_cannot_complete_another_users_follow_up(self):
+        self.interaction2.follow_up_date = timezone.now() + timedelta(days=2)
+        self.interaction2.save()
+
+        self.client.force_login(self.user1)
+
+        response = self.client.post(
+            reverse(
+                "interactions:follow_up_complete",
+                args=[self.interaction2.pk],
+            )
+        )
+
+        self.interaction2.refresh_from_db()
+
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
+
+        self.assertFalse(self.interaction2.follow_up_completed)
+
+    def test_follow_up_complete_requires_post(self):
+        self.interaction1.follow_up_date = timezone.now() + timedelta(days=2)
+        self.interaction1.save()
+
+        self.client.force_login(self.user1)
+
+        response = self.client.get(
+            reverse(
+                "interactions:follow_up_complete",
+                args=[self.interaction1.pk],
+            )
+        )
+
+        self.interaction1.refresh_from_db()
+
+        self.assertEqual(
+            response.status_code,
+            405,
+        )
+
+        self.assertFalse(self.interaction1.follow_up_completed)
