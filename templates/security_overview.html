@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="h3 mb-3">Güvenli Veri İzolasyonu</h1>
+
+                    <p class="text-muted mb-4">
+                        ClientTrack'te her kullanıcı yalnızca kendi verilerine erişebilir.
+                        Kayıtlar backend tarafında kullanıcı sahipliği kontrol edilerek korunur.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Müşteriler</h2>
+                                <p class="mb-0">
+                                    Her kullanıcı yalnızca kendi müşteri kayıtlarını görebilir,
+                                    güncelleyebilir ve silebilir.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Görüşmeler</h2>
+                                <p class="mb-0">
+                                    Interaction kayıtları kullanıcıya göre filtrelenir ve başka
+                                    kullanıcıların kayıtlarına erişim engellenir.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Satış Fırsatları</h2>
+                                <p class="mb-0">
+                                    Deal kayıtlarında ownership kontrolü uygulanır.
+                                    Yetkisiz erişim durumunda 404 döner.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Takım Üyeleri</h2>
+                                <p class="mb-0">
+                                    TeamMember kayıtları owner=request.user mantığıyla
+                                    kullanıcıya özel tutulur.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Raporlar</h2>
+                                <p class="mb-0">
+                                    Dashboard ve raporlar yalnızca giriş yapan kullanıcının
+                                    verilerinden üretilir.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Yetkisiz ID Erişimi</h2>
+                                <p class="mb-0">
+                                    Kullanıcı URL'deki ID değerini değiştirse bile kendisine ait
+                                    olmayan kayıtlar için erişim verilmez.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a
+                            href="{% url 'core:home' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Ana Sayfaya Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

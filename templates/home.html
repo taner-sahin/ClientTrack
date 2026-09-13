@@ -278,17 +278,25 @@
         </div>
 
         <div class="col-lg-4">
-          <article class="ct-feature-card ct-security-card" id="guvenlik">
-            <div class="ct-lock">🔐</div>
+          <a
+            href="{% url 'core:security_overview' %}"
+            class="text-decoration-none text-reset d-block h-100"
+          >
+            <article
+              class="ct-feature-card ct-security-card h-100"
+              id="guvenlik"
+            >
+              <div class="ct-lock">🔐</div>
 
-            <div>
-              <h3>Güvenli Veri İzolasyonu</h3>
-              <p>
-                Her kullanıcı yalnızca kendi müşteri, görüşme ve satış
-                kayıtlarına erişir.
-              </p>
-            </div>
-          </article>
+              <div>
+                <h3>Güvenli Veri İzolasyonu</h3>
+                <p>
+                  Her kullanıcı yalnızca kendi müşteri, görüşme ve satış
+                  kayıtlarına erişir.
+                </p>
+              </div>
+            </article>
+          </a>
         </div>
       </div>
     </div>
