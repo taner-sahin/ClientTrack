@@ -384,7 +384,6 @@ Manage team members, roles, contact information, and active status.
 
 ClientTrack applies backend ownership controls so authenticated users can access only their own records.
 
-![ClientTrack Secure Data Isolation](screenshots/security.png)
 
 ## Security Design
 
