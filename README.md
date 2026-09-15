@@ -2,7 +2,15 @@
 
 ClientTrack is a backend-focused Django mini CRM application designed to help users manage clients, interactions, sales opportunities, follow-up activities, team members, and business reports in one place.
 
-The project focuses on secure backend architecture, authentication, authorization, ownership control, strict user-specific data isolation, and automated testing.
+The project focuses on secure backend architecture, authentication, authorization, ownership control, strict user-specific data isolation, automated testing, and production deployment.
+
+## Live Application
+
+**Production:** https://clienttrack.tanersahindev.com
+
+ClientTrack is deployed on a production VPS using Ubuntu Linux, PostgreSQL, Gunicorn, Nginx, SSL/TLS, HTTPS, and HSTS.
+
+---
 
 ## Key Highlights
 
@@ -18,6 +26,14 @@ The project focuses on secure backend architecture, authentication, authorizatio
 - Ownership-protected CRUD operations
 - 61 automated tests passing
 - Modular Django application structure
+- PostgreSQL production database
+- Gunicorn application server
+- Nginx reverse proxy
+- HTTPS production deployment
+- HSTS enabled
+- systemd service management
+
+---
 
 ## Features
 
@@ -112,7 +128,9 @@ Reports include:
 
 All report calculations are restricted to the authenticated user's own records.
 
-### Secure Data Isolation
+---
+
+## Secure Data Isolation
 
 ClientTrack is designed around strict user-specific data isolation.
 
@@ -153,23 +171,27 @@ The isolation model applies to:
 
 Unauthorized record access returns a 404 response rather than exposing another user's private data.
 
+---
+
 ## Authentication, Authorization and Ownership
 
 ClientTrack separates three important backend security concepts:
 
-**Authentication**
+### Authentication
 
 Determines who the user is.
 
-**Authorization**
+### Authorization
 
 Determines what the authenticated user is allowed to access.
 
-**Ownership**
+### Ownership
 
 Determines which records belong to the authenticated user.
 
 These concepts are enforced throughout the application's backend rather than relying on frontend restrictions.
+
+---
 
 ## Tech Stack
 
@@ -183,7 +205,7 @@ These concepts are enforced throughout the application's backend rather than rel
 ### Database
 
 - SQLite for local development
-- PostgreSQL planned for production
+- PostgreSQL for production
 
 ### Frontend
 
@@ -197,11 +219,26 @@ These concepts are enforced throughout the application's backend rather than rel
 - Django Test Client
 - Automated security and regression testing
 
+### Production Infrastructure
+
+- VPS
+- Ubuntu Linux
+- PostgreSQL
+- Gunicorn
+- Nginx
+- systemd
+- Domain and DNS configuration
+- SSL/TLS
+- HTTPS
+- HSTS
+
 ### Development and Version Control
 
 - Git
 - GitHub
 - Visual Studio Code
+
+---
 
 ## Automated Testing
 
@@ -246,6 +283,8 @@ OK
 
 Automated testing is especially important in ClientTrack because security rules must continue working as new application features are added.
 
+---
+
 ## Project Structure
 
 ClientTrack follows a modular Django application architecture.
@@ -273,7 +312,9 @@ clienttrack/
 
 Each Django application is responsible for a specific part of the CRM system. This keeps the project modular, maintainable, and easier to test.
 
-## Installation and Setup
+---
+
+## Installation and Local Setup
 
 Follow the steps below to run ClientTrack locally.
 
@@ -296,6 +337,12 @@ Activate the virtual environment on Windows:
 venv\Scripts\activate
 ```
 
+On Linux:
+
+```bash
+source venv/bin/activate
+```
+
 ### 3. Install Dependencies
 
 ```bash
@@ -306,7 +353,7 @@ pip install -r requirements.txt
 
 Create a `.env` file based on the provided `.env.example` file.
 
-Sensitive configuration such as the Django secret key should not be committed to GitHub.
+Sensitive configuration such as the Django secret key and production database credentials must not be committed to GitHub.
 
 ### 5. Apply Database Migrations
 
@@ -322,6 +369,8 @@ python manage.py runserver
 
 The application will then be available through Django's local development server.
 
+---
+
 ## Environment Variables
 
 ClientTrack uses environment variables to separate sensitive configuration from source code.
@@ -334,7 +383,16 @@ The repository includes:
 
 Create a local `.env` file based on this example and provide the required configuration values.
 
-The real `.env` file should remain private and must not contain credentials committed to the repository.
+Production configuration includes environment-specific values such as:
+
+- Django secret key
+- Debug configuration
+- Allowed hosts
+- Database connection configuration
+
+The real `.env` file remains private and is excluded from version control.
+
+---
 
 ## Screenshots
 
@@ -384,6 +442,9 @@ Manage team members, roles, contact information, and active status.
 
 ClientTrack applies backend ownership controls so authenticated users can access only their own records.
 
+![ClientTrack Secure Data Isolation](screenshots/security.png)
+
+---
 
 ## Security Design
 
@@ -399,50 +460,201 @@ Important security principles include:
 - Ownership checks for delete operations
 - POST for state-changing operations
 - CSRF protection
+- Secure session cookies in production
+- Secure CSRF cookies in production
+- HTTPS redirection
+- Trusted CSRF origins
 - User-specific dashboard statistics
 - User-specific reports
 - Automated security tests
+- HSTS
 
 The frontend is never trusted to enforce ownership.
 
 Security rules are applied directly in Django views and querysets.
 
+---
+
 ## Production Deployment
 
-Production deployment is the next stage of ClientTrack.
+ClientTrack is deployed to a production VPS and is publicly accessible over HTTPS.
 
-The planned production architecture is:
+### Live Application
+
+**Production URL:** https://clienttrack.tanersahindev.com
+
+### Production Architecture
 
 ```text
+User / Browser
+      │
+      ▼
 Internet
-   ↓
+      │
+      ▼
 Domain / DNS
-   ↓
+      │
+      ▼
 HTTPS / SSL/TLS
+      │
+      ▼
+Nginx
+      │
+      ▼
+Gunicorn
+      │
+      ▼
+Django
+      │
+      ▼
+PostgreSQL
+```
+
+### VPS and Ubuntu Linux
+
+The application runs on a VPS using Ubuntu Linux.
+
+The VPS provides the always-running production environment where the Django application, web server, application server, and production database operate.
+
+### PostgreSQL
+
+PostgreSQL is used as the production database.
+
+SQLite remains available for local development, while production data is stored in PostgreSQL.
+
+Database credentials and connection configuration are provided through environment variables rather than being hard-coded into the repository.
+
+### Gunicorn
+
+Gunicorn runs the Django WSGI application in production.
+
+Instead of exposing Django's development server to the internet, Gunicorn provides the production application server layer.
+
+Gunicorn communicates with Nginx through a Unix socket.
+
+### systemd
+
+Gunicorn is managed through a systemd service.
+
+This allows ClientTrack to run independently of an SSH terminal session and provides service management commands for starting, stopping, restarting, and checking the application.
+
+Example:
+
+```bash
+sudo systemctl status clienttrack
+```
+
+### Nginx
+
+Nginx acts as the public-facing web server and reverse proxy.
+
+Incoming web requests reach Nginx first. Nginx then forwards application requests to Gunicorn.
+
+The request flow is:
+
+```text
+Browser
    ↓
 Nginx
    ↓
 Gunicorn
    ↓
 Django
-   ↓
-PostgreSQL
 ```
 
-Planned production technologies:
+### Domain and DNS
 
-- VPS
-- Ubuntu/Linux
-- PostgreSQL
-- Gunicorn
-- Nginx
-- Domain
-- DNS
-- SSL/TLS
-- HTTPS
-- HSTS
+The ClientTrack production application uses the following subdomain:
 
-This section will be updated after ClientTrack is deployed to the production environment.
+```text
+clienttrack.tanersahindev.com
+```
+
+DNS connects the domain name to the production VPS.
+
+This allows users to access the application using a human-readable domain instead of the server IP address.
+
+### SSL/TLS and HTTPS
+
+The production application is served over HTTPS.
+
+SSL/TLS encrypts communication between the user's browser and the production server.
+
+This protects sensitive information such as authentication sessions and form submissions while data travels across the network.
+
+### HSTS
+
+HTTP Strict Transport Security is enabled.
+
+HSTS instructs compatible browsers to use HTTPS when communicating with the application for the configured HSTS duration.
+
+The deployment currently uses a controlled HSTS configuration rather than enabling preload and all-subdomain enforcement.
+
+### Django Production Security
+
+Production Django security configuration includes:
+
+- `DEBUG=False`
+- Production `ALLOWED_HOSTS`
+- `CSRF_TRUSTED_ORIGINS`
+- `SECURE_PROXY_SSL_HEADER`
+- `SECURE_SSL_REDIRECT=True`
+- `SESSION_COOKIE_SECURE=True`
+- `CSRF_COOKIE_SECURE=True`
+- HSTS configuration
+
+These settings help ensure Django correctly operates behind the Nginx HTTPS reverse proxy.
+
+### Production Request Flow
+
+The complete production request flow can be summarized as:
+
+```text
+Browser
+   ↓
+DNS resolves clienttrack.tanersahindev.com
+   ↓
+HTTPS request reaches the VPS
+   ↓
+Nginx receives the request
+   ↓
+Nginx forwards the request to the Gunicorn Unix socket
+   ↓
+Gunicorn runs the Django WSGI application
+   ↓
+Django processes application logic
+   ↓
+Django ORM communicates with PostgreSQL
+   ↓
+Response travels back through Gunicorn and Nginx
+   ↓
+Browser receives the HTTPS response
+```
+
+This architecture separates the responsibilities of the web server, application server, Django application, and database.
+
+---
+
+## Production Verification
+
+The production deployment has been verified through the running application and server-side checks.
+
+Verification includes:
+
+- Gunicorn systemd service running successfully
+- Gunicorn workers running
+- Gunicorn listening through the ClientTrack Unix socket
+- Nginx serving the public application
+- HTTPS responding successfully
+- PostgreSQL used as the production database
+- Django deployment security checks reviewed
+- Secure session cookies enabled
+- Secure CSRF cookies enabled
+- HSTS enabled
+
+The production application responds successfully over HTTPS.
+
+---
 
 ## Future Improvements
 
@@ -457,7 +669,9 @@ Possible future improvements include:
 - Email notifications
 - Additional CRM analytics
 - CI/CD
-- Cloud deployment improvements
+- Additional deployment automation
+
+---
 
 ## Project Status
 
@@ -474,18 +688,49 @@ Current ClientTrack status:
 - Secure Data Isolation: Complete
 - Automated Tests: 61 tests passing
 - Security Audit: Complete
-- Professional README: In Progress
-- Project Screenshots: In Progress
-- PostgreSQL Production Database: Planned
-- Gunicorn: Planned
-- Nginx: Planned
-- Domain/DNS: Planned
-- SSL/TLS and HTTPS: Planned
-- HSTS: Planned
-- Production Deployment: Planned
+- Professional README: Complete
+- Project Screenshots: Complete
+- PostgreSQL Production Database: Complete
+- Gunicorn: Complete
+- systemd Service: Complete
+- Nginx: Complete
+- Domain/DNS: Complete
+- SSL/TLS and HTTPS: Complete
+- HSTS: Enabled
+- Production Deployment: Complete
+
+---
+
+## What This Project Demonstrates
+
+ClientTrack demonstrates practical Django backend development beyond basic CRUD functionality.
+
+The project includes:
+
+- Multi-user backend architecture
+- Authentication and authorization
+- Ownership-based access control
+- User data isolation
+- Django ORM usage
+- Relational data management
+- Secure CRUD operations
+- Automated testing
+- Security-focused backend design
+- PostgreSQL production database configuration
+- Linux VPS deployment
+- Gunicorn application serving
+- Nginx reverse proxy configuration
+- Domain and DNS configuration
+- SSL/TLS and HTTPS
+- HSTS
+- Production service management with systemd
+
+The goal of the project is to demonstrate the complete path from Django backend development to a securely deployed production application.
 
 ---
 
 ## About
 
 ClientTrack is a backend-focused Django mini CRM project built to demonstrate secure multi-user data handling, CRM workflows, automated testing, and production-oriented Django development.
+
+The project was developed as a practical backend portfolio project with emphasis on understanding how Django applications work from database and security design through production deployment.
